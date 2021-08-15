@@ -1,41 +1,44 @@
 import axios from 'axios'
-
+import AxiosInstance from 'axios'
+import { ElLoading } from 'element-plus'
+import { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.type'
+import { IRequesetInterceptors, IRequestConfig } from './types'
 class Request {
-  instance = null
-  interceptors = null
-  showLoading = null
-  loading = false
-  constructor(config) {
+  instance: AxiosInstance
+  interceptors?: IRequesetInterceptors
+  showLoading: boolean
+  loading?: ILoadingInstance
+  constructor(config: IRequestConfig) {
     this.instance = axios.create(config)
-    this.interceptors = config.interceptors || null
+    this.interceptors = config.interceptors
     this.showLoading = config.showLoading ?? true
     /**
      this.instance.interceptors.use 调用axios 实例上面的方法，执行传入的自定义拦截器
      按照代码的执行顺序，是传入的自定义的拦截器先执行
      */
     this.instance.interceptors.request.use(this.interceptors?.requestInterceptors, this.interceptors?.requestInterceptorError)
-    this.instance.interceptors.response.use(this.interceptors?.reponseInterceptors, this.interceptors?.reponseInterceptorError)
+    this.instance.interceptors.response.use(this.interceptors?.responseInterceptors, this.interceptors?.responseInterceptorError)
 
     this.instance.interceptors.request.use(
-      (config) => {
+      (config: any) => {
         return config
       },
-      (error) => {
+      (error: any) => {
         console.warn('request error')
         return error
       }
     )
     this.instance.interceptors.response.use(
-      (response) => {
+      (response: any) => {
         if (response.returnCode === '-10000') {
           return console.warn(`请求失败 ： ${response.messages}`)
         }
         return response.data
       },
-      (error) => {
+      (error: any) => {
         if (!error) return
-        let statusCode = error.status
-        let message = error.message
+        const statusCode = error.status
+        const message = error.message
         switch (statusCode) {
           case 401:
             console.warn('未授权')
@@ -53,7 +56,7 @@ class Request {
       可以自己定义拦截器
 
   */
-  request(config) {
+  request<T>(config: IRequestConfig<T>): Promise<T> {
     return new Promise((resolve, reject) => {
       if (config.interceptors?.requestInterceptors) {
         config = config.interceptors.requestInterceptors(config)
@@ -62,14 +65,14 @@ class Request {
         this.showLoading = false
       }
       this.instance.request(config).then(
-        (res) => {
+        (res: any) => {
           if (config.interceptors?.responseInterceptors) {
             res = config.interceptors.responseInterceptors(res)
           }
           this.showLoading = true
           resolve(res)
         },
-        (rej) => {
+        (rej: any) => {
           this.showLoading = false
           reject(rej)
           return rej
@@ -77,13 +80,13 @@ class Request {
       )
     })
   }
-  get(config) {
+  get<T>(config: IRequestConfig<T>): Promise<T> {
     return this.request({ ...config, method: 'GET' })
   }
-  post(config) {
+  post<T>(config: IRequestConfig<T>): Promise<T> {
     return this.request({ ...config, method: 'POST' })
   }
-  delete(config) {
+  delete<T>(config: IRequestConfig<T>): Promise<T> {
     return this.request({ ...config, method: 'DELETE' })
   }
 }

@@ -29,6 +29,7 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## prettier format
+
 ```js
 
   使用 prettier 对代码进行格式化 修改配置规则 必须重新启动编辑器
@@ -40,5 +41,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## 解决 eslint prettier 的冲突问题
 
-* 当在创建项目的时候，选择了使用pritter + eslint 来对项目进行校验，默认会安装解决冲突的插件 @vue/eslint-config-prettier  eslint-plugin-prettier
-* 当项目没有的时候 自行安装
+- 当在创建项目的时候，选择了使用 pritter + eslint 来对项目进行校验，默认会安装解决冲突的插件 @vue/eslint-config-prettier eslint-plugin-prettier
+- 当项目没有的时候 自行安装

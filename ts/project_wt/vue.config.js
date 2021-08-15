@@ -1,5 +1,5 @@
 const path = require('path')
-
+const webpack = require('webpack')
 module.exports = {
   // 1.配置方式一: CLI提供的属性
   outputDir: './build',
@@ -7,12 +7,16 @@ module.exports = {
   devServer: {
     open: true,
     proxy: {
-      '/home/': {
-        target: 'http://123.207.32.32:8000/',
-        changeOrigin: true
+      '/api': {
+        target: 'http://152.136.185.210:5000',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
       }
     }
   },
+
   // 2.配置方式二: 和webpack属性完全一致, 最后会进行合并
   // configureWebpack: {
   //   resolve: {

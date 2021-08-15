@@ -8,10 +8,12 @@ module.exports = {
     ecmaVersion: 2020
   },
   rules: {
+    'prettier/prettier': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    "@typescript-eslint/explicit-module-boundary-types": 'off'
+    '@typescript-eslint/explicit-module-boundary-types': 'off'
   }
 }
