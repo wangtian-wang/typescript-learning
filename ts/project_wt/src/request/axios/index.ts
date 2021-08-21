@@ -89,5 +89,8 @@ class Request {
   delete<T>(config: IRequestConfig<T>): Promise<T> {
     return this.request({ ...config, method: 'DELETE' })
   }
+  patch<T>(config: IRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'PATCH' })
+  }
 }
 export default Request

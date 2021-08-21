@@ -1,33 +1,42 @@
 <template>
   <div class="user">
-    <!-- <page-search :searchFormConfig="searchFormConfig" /> -->
-    <page-content :contentTableConfig="contentTableConfig" pageName="users" @selectionChange="selectionChange"></page-content>
+    <common-form :formConfig="formConfig" :formHeader="formHeader" @searchForm="handleSearchForm" @resetForm="handleResetClick"></common-form>
+    <common-content ref="commonContentRef" pageName="users"></common-content>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
+import { useStore } from 'vuex'
 
-import PageSearch from '@/components/page-search'
-import PageContent from '@/components/page-content'
+import CommonForm from '@/components/common-form/index'
+import CommonContent from '@/components/common-content/index'
+import { formConfig } from './config/search'
 
-import { searchFormConfig } from './config/search.config'
-import { contentTableConfig } from './config/content.config'
-
+/** utils */
+import { useFormSearch } from '@/hooks/form-search'
 export default defineComponent({
   name: 'users',
   components: {
-    // PageSearch,
-    PageContent
+    CommonForm,
+    CommonContent
   },
   setup() {
+    const store = useStore()
+    const formHeader = ref('用户搜索表单')
+
+    const [commonContentRef, handleResetClick, handleSearchForm] = useFormSearch()
     const selectionChange = (seletedItem: any) => {
       console.log(seletedItem)
     }
+
     return {
+      formConfig,
+      formHeader,
+      commonContentRef,
       selectionChange,
-      searchFormConfig,
-      contentTableConfig
+      handleSearchForm,
+      handleResetClick
     }
   }
 })
