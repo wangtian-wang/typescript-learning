@@ -1,7 +1,7 @@
 <template>
   <div class="user">
     <common-form :formConfig="formConfig" :formHeader="formHeader" @searchForm="handleSearchForm" @resetForm="handleResetClick"></common-form>
-    <common-content ref="commonContentRef" pageName="users"></common-content>
+    <common-content ref="commonContentRef" pageName="users" :tableConfig="tableConfig"> </common-content>
   </div>
 </template>
 
@@ -11,8 +11,9 @@ import { useStore } from 'vuex'
 
 import CommonForm from '@/components/common-form/index'
 import CommonContent from '@/components/common-content/index'
-import { formConfig } from './config/search'
 
+import { formConfig } from './config/search'
+import { tableConfig } from './config/table'
 /** utils */
 import { useFormSearch } from '@/hooks/form-search'
 export default defineComponent({
@@ -32,6 +33,7 @@ export default defineComponent({
 
     return {
       formConfig,
+      tableConfig,
       formHeader,
       commonContentRef,
       selectionChange,
