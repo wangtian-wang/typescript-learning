@@ -1,7 +1,7 @@
 <template>
   <div class="common-content">
     <base-table v-bind="tableConfig" :tableData="pageListData" :list-count="pageListCount" v-model:page="pageInfo">
-      <template #headerHandler>
+      <template #headerHandler v-if="showHeaderButton">
         <el-button type="primary" size="medium" @click="handleCreate"> 新建用户</el-button>
       </template>
       <template #status="scope">
@@ -17,10 +17,9 @@
         <el-button icon="el-icon-edit" size="mini" type="text" @click="handleEdit(scope.row)"> 编辑</el-button>
         <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"> 删除</el-button>
       </template>
+      <!-- 特殊的插槽 类似于图片等 -->
       <template v-for="other in otherPropsSlots" :key="other.prop" #[other.slotName]="scope">
-        <template>
-          <slot :name="other.slotName" :row="scope.row"></slot>
-        </template>
+        <slot :name="other.slotName" :row="scope.row"></slot>
       </template>
     </base-table>
   </div>
@@ -43,8 +42,13 @@ export default defineComponent({
     tableConfig: {
       type: Object,
       require: true
+    },
+    showHeaderButton: {
+      type: Boolean,
+      default: true
     }
   },
+  emits: ['create', 'edit'],
   setup(props, { emit }) {
     const store = useStore()
     /** 双向绑定pageinfo  页码发生变化 重新获取数据*/
@@ -66,11 +70,23 @@ export default defineComponent({
     /** 从store里面获取数据 */
     const pageListData = computed(() => store.getters[`system/pageListData`](props.pageName))
     const pageListCount = computed(() => store.getters[`system/pageListCount`](props.pageName))
-    console.log(pageListData, pageListCount)
 
-    const handleEdit = (data) => {}
+    /**动态获取其他特别的插槽 可以提供父组件使用的插槽 */
+    let otherPropsSlots = props.tableConfig?.tableConfigList.filter((item) => item.slotName === 'image' || item.slotName === 'oldPrice')
+
+    /** 新建  编辑 逻辑 */
+    /** 新建  编辑  需要将数据传递给表单 所以需要将数据传递到父组件 */
+
+    const handleCreate = () => {
+      emit('create')
+    }
+    const handleEdit = (data) => {
+      emit('edit', data)
+    }
+
+    /** 删除  逻辑 */
     const handleDelete = (data) => {}
-    return { getData, pageListData, pageListCount, handleEdit, handleDelete }
+    return { getData, pageInfo, otherPropsSlots, pageListData, pageListCount, handleEdit, handleDelete, handleCreate }
   }
 })
 </script>

@@ -1,6 +1,6 @@
-export const contentTableConfig = {
-  title: '用户列表',
-  propList: [
+export const tableConfig = {
+  title: '角色列表',
+  tableConfigList: [
     { prop: 'name', label: '角色名', minWidth: '100' },
     { prop: 'intro', label: '权限介绍', minWidth: '100' },
     {
@@ -18,5 +18,8 @@ export const contentTableConfig = {
     { label: '操作', minWidth: '120', slotName: 'handler' }
   ],
   showIndexColumn: true,
-  showSelectColumn: true
+  showSelectColumn: true,
+  showHeaderButton: true,
+  border: false,
+  tableHeight: '600px'
 }

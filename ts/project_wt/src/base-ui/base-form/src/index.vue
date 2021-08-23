@@ -108,11 +108,6 @@ export default {
   components: {},
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const data = reactive({})
-    onMounted(() => {})
-    computed(() => {
-      return 1
-    })
     const handleValueChange = (value, field) => {
       /** 动态的更新父组件的 表单绑定数据输入的值 */
       emit('update:modelValue', { ...props.modelValue, [field]: value })

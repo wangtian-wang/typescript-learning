@@ -35,7 +35,7 @@ const loginModule: Module<ILoginState, IRootState> = {
     }
   },
   actions: {
-    async handleLoginAction({ commit }, payload: IAccount) {
+    async handleLoginAction({ commit, dispatch }, payload: IAccount) {
       const loginResult = await accountLogin(payload)
       let id: number, token
       if (loginResult.code == 0) {
@@ -43,6 +43,8 @@ const loginModule: Module<ILoginState, IRootState> = {
         id = loginResult.data.id
         localCache.setCache('token', loginResult.data.token)
         commit('changeToken', token)
+        // 登录拿到token后 直接获取权限菜单数据
+        dispatch('getInititalDataAction', null, { root: true })
         const userInfoResult = await userInfo(id)
         if (userInfoResult && userInfoResult.data) {
           const info = userInfoResult.data

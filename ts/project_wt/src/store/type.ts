@@ -3,11 +3,9 @@ import { ILoginState } from './login/login-type'
 export interface IRootState {
   name?: string
   age?: number
-  infoObj?: {
-    counter: {
-      number: number
-    }
-  }
+  rolesArray?: any[]
+  rolesMenus?: any[]
+  department?: any[]
 }
 export interface IRootWithModule {
   login: ILoginState

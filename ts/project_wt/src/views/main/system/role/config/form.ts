@@ -1,17 +1,15 @@
-import { IForm } from '@/base-ui/form'
-
-export const searchFormConfig: IForm = {
+export const formConfig = {
   labelWidth: '120px',
   formItems: [
     {
       field: 'name',
-      type: 'input',
+      type: 'text',
       label: '角色名称',
       placeholder: '请输入角色名称'
     },
     {
       field: 'intro',
-      type: 'input',
+      type: 'text',
       label: '权限介绍',
       placeholder: '请输入权限介绍'
     },
