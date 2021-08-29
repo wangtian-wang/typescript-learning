@@ -10,3 +10,4 @@ declare module 'axios' {
 }
 
 declare module '*.js'
+declare module '*.json'

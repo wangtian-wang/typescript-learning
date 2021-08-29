@@ -49,7 +49,6 @@ export default defineComponent({
       if (departmentOptions) {
         departmentOptions.options = store.state.department.map((item: any) => ({ label: item.name, value: item.id }))
       }
-      console.log(roleOption?.options, departmentOptions?.options)
       return dialogFormConfig
     })
     // 点击新建时候 需要显示密码 弹框 点击编辑的时候 不需要显示密码弹框

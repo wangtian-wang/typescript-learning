@@ -4,6 +4,7 @@ import { IRootState, IStoreType } from './type'
 // store module
 import login from './login/login'
 import system from './main/system/system'
+import analysis from './main/analysis/anaysis'
 // localestorage utils
 import localCache from '@/utils/getCache'
 
@@ -29,8 +30,8 @@ const store = createStore<IRootState>({
   getters: {},
   actions: {
     async getInititalDataAction({ commit, dispatch }) {
-      if (dispatch('initData')) return
-
+      const bool: boolean = await dispatch('initData')
+      if (bool) return
       // 部门数据
       const departmentResult = await getPageListData('/department/list', {
         offset: 0,
@@ -58,23 +59,27 @@ const store = createStore<IRootState>({
       const menuList = localCache.getCache('menuList')
       const roleList = localCache.getCache('roleList')
       if (!departmentList || !menuList || !roleList) {
-        return false
+        return Promise.resolve(false)
       } else {
         commit('changeDepartment', departmentList)
         commit('changeRolesMenus', menuList)
         commit('changeRolesArray', roleList)
-        return true
+        return Promise.resolve(true)
       }
     }
   },
   modules: {
     login,
-    system
+    system,
+    analysis
   }
 })
 export function initStore() {
+  /**这里面的代码 只在项目跑起来的时候执行一次 然后就在刷新的时候执行 */
   store.dispatch('login/initStore')
-  store.dispatch('getInititalDataAction')
+
+  store.dispatch('getInititalDataAction', null, { root: true })
+  store.dispatch('analysis/getAnslysisDataAction')
 }
 export function useStore(): Store<IStoreType> {
   return useVuexStore()
