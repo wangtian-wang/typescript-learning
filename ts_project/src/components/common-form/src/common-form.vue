@@ -32,6 +32,7 @@ export default defineComponent({
   components: {
     BaseForm
   },
+  emits: ['resetForm', 'search'],
   setup(props, { emit }) {
     /** 动态获取不同field的表单字段 */
     let formData = {}
@@ -50,7 +51,7 @@ export default defineComponent({
     }
     /** 搜索*/
     const handleSearchForm = () => {
-      emit('searchForm', formData.value)
+      emit('search', formData.value)
     }
     return {
       formData,

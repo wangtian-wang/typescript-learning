@@ -1,6 +1,7 @@
 import { IBaseForm } from '@/base-ui/base-form'
 
 export const dialogFormConfig: IBaseForm = {
+  title: '新建角色',
   formItems: [
     {
       field: 'name',

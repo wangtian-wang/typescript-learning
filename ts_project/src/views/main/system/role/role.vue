@@ -1,8 +1,8 @@
 <template>
   <div class="role">
-    <common-form :formConfig="formConfig" formHeader="角色列表搜索"></common-form>
-    <common-content :tableConfig="tableConfig" pageName="role" @create="handleCreateItem" @edit="handleEditItem"></common-content>
-    <common-dialog :formConfig="dialogFormConfig" pageName="role" :formDefaultInfo="formDefaultInfo" :selectedRolesIdArray="selectedRolesIdArray" ref="dialogRef">
+    <common-form :formConfig="formConfig" formHeader="角色列表搜索" @reset-form="handleResetClick" @search="handleSearchClick"></common-form>
+    <common-content :tableConfig="tableConfig" pageName="role" @create="handleCreateItem" @edit="handleEditItem" ref="commonContentRef"></common-content>
+    <common-dialog :formConfig="dialogFormConfig" :dialogTitle="dialogFormConfig.title" pageName="role" :formDefaultInfo="formDefaultInfo" :selectedRolesIdArray="selectedRolesIdArray" ref="dialogRef">
       <div class="menu-tree">
         <el-tree ref="elTreeRef" :data="treeMenus" show-checkbox node-key="id" :props="{ children: 'children', label: 'name' }" @check="handleCheckChange"> </el-tree>
       </div>
@@ -23,8 +23,9 @@ import { tableConfig } from './config/table'
 import { formConfig } from './config/form'
 import { dialogFormConfig } from './config/dialog'
 import { useDialogSearch } from '@/hooks/dialog-search'
-
 import { menuMapLeafKeys } from '@/utils/map-menus'
+
+import { useFormSearch } from '@/hooks/form-search'
 export default defineComponent({
   name: 'role',
   components: { CommonContent, CommonForm, CommonDialog },
@@ -54,6 +55,8 @@ export default defineComponent({
     }
     let [dialogRef, handleCreateItem, handleEditItem, formDefaultInfo] = useDialogSearch(undefined, editCallBack)
 
+    // 表单搜索功能 使用封装的hooks函数
+    const [commonContentRef, handleResetClick, handleSearchClick] = useFormSearch('role')
     return {
       dialogRef,
       elTreeRef,
@@ -63,9 +66,12 @@ export default defineComponent({
       formDefaultInfo,
       selectedRolesIdArray,
       treeMenus,
+      commonContentRef,
       handleCreateItem,
       handleEditItem,
-      handleCheckChange
+      handleCheckChange,
+      handleResetClick,
+      handleSearchClick
     }
   }
 })

@@ -20,4 +20,5 @@ export interface IBaseForm {
   colLayout?: any
   itemStyles?: any
   labelPosition?: any
+  title?: string
 }

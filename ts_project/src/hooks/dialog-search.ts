@@ -11,7 +11,7 @@ export function useDialogSearch(createCb?: CallBackFn, editCb?: CallBackFn) {
     if (dialogRef.value) {
       dialogRef.value.dialogVisible = true
     }
-    createCb && createCb
+    createCb && createCb()
   }
   const handleEditItem = (item: any) => {
     formDefaultInfo.value = { ...item }

@@ -37,5 +37,7 @@ export const formConfig: IBaseForm = {
         type: 'daterange'
       }
     }
-  ]
+  ],
+  colLayout: { span: 24 },
+  labelPosition: 'right'
 }

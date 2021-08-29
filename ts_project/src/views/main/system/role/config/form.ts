@@ -14,7 +14,7 @@ export const formConfig = {
       placeholder: '请输入权限介绍'
     },
     {
-      field: 'createTime',
+      field: 'createAt',
       type: 'datepicker',
       label: '创建时间',
       otherOptions: {

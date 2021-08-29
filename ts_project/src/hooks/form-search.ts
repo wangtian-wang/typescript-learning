@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import CommonContent from '@/components/common-content/index'
-export function useFormSearch() {
+export function useFormSearch(role?: string) {
   const commonContentRef = ref<InstanceType<typeof CommonContent>>()
   const handleResetClick = () => {
     commonContentRef.value?.getData()

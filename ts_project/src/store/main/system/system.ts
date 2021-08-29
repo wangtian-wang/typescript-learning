@@ -50,7 +50,6 @@ const systemModule: Module<ISystemState, IRootState> = {
       const url = `${pageName}/list`
       const result = await getPageListData(url, payload.queryInfo)
       const { list, totalCount } = result.data
-      console.log(pageName)
 
       const getPageName = pageName.slice(0, 1).toUpperCase() + pageName.slice(1)
       commit(`change${getPageName}List`, list)
@@ -83,8 +82,8 @@ const systemModule: Module<ISystemState, IRootState> = {
     async editPageDataAction({ dispatch }, payload: any) {
       // 1.编辑数据的请求
       const { pageName, editData, id } = payload
-      console.log(editData)
       const pageUrl = `/${pageName}/${id}`
+
       await editOldData(pageUrl, editData)
 
       // 2.请求最新的数据

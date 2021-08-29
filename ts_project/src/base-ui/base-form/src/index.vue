@@ -4,7 +4,7 @@
       <slot name="header"></slot>
     </div>
     <div class="form-wrapper">
-      <el-form>
+      <el-form :label-position="labelPosition">
         <el-row v-bind="colLayout">
           <template v-for="item in formItems" :key="item.field">
             <el-form-item v-if="!item.isHidden" :label="item.label" :rules="item.rules ? item.rules : {}" :style="itemStyles">
@@ -26,7 +26,7 @@
                   :model-value="modelValue[`${item.field}`]"
                   @update:modelValue="handleValueChange($event, item.field)"
                 >
-                  <el-option v-for="option in item.options" :key="option.value" :value="option.value" :label="option.title"> {{ option.title }} </el-option>
+                  <el-option v-for="option in item.options" :key="option.value" :value="option.value" :label="option.title || option.label"> </el-option>
                 </el-select>
               </template>
               <template v-else-if="item.type === 'datepicker'">
@@ -91,7 +91,7 @@ export default {
     /* 绑定到表单控件上面的公共属性  */
     labelPosition: {
       type: String,
-      default: 'left'
+      default: 'top'
     },
     /* 绑定到 el-row上面的公共属性  */
     colLayout: {

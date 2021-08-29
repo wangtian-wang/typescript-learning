@@ -1,6 +1,6 @@
 <template>
   <div id="common-dialog-wrapper">
-    <el-dialog title="新建用户" v-model="dialogVisible" width="30%" center destroy-on-close>
+    <el-dialog :title="dialogTitle" v-model="dialogVisible" width="30%" center destroy-on-close>
       <base-form v-bind="formConfig" v-model="formData"></base-form>
       <slot></slot>
       <template #footer>
@@ -38,6 +38,10 @@ export default defineComponent({
     selectedRolesIdArray: {
       type: Object,
       default: () => {}
+    },
+    dialogTitle: {
+      type: String,
+      default: '新建'
     }
   },
   setup(props, { emit }) {
