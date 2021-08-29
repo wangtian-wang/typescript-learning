@@ -1,6 +1,6 @@
 <template>
   <div class="user">
-    <common-form :formConfig="formConfig" :formHeader="formHeader" @searchForm="handleSearchForm" @resetForm="handleResetClick"></common-form>
+    <common-form :formConfig="formConfig" :formHeader="formHeader" @search="handleSearchForm" @resetForm="handleResetClick"></common-form>
     <common-content ref="commonContentRef" pageName="users" :tableConfig="tableConfig" @create="handleCreateItem" @edit="handleEditItem"> </common-content>
     <common-dialog :dialogTitle="dialogConfig.title" :formConfig="dialogConfig" pageName="users" :formDefaultInfo="formDefaultInfo" ref="dialogRef"></common-dialog>
   </div>
