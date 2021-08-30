@@ -1,11 +1,11 @@
 <template>
   <div class="chart-wrapper">
-    <div class="chart-ref" ref="chartRef" :style="{ width: width, height: height }"></div>
+    <div class="chart-ref" ref="echartRef" :style="{ width: width, height: height }"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { reactive, ref, computed, watch, onMounted, watchEffect, onUnmounted } from 'vue'
+import { reactive, ref, computed, watch, onMounted, watchEffect, onUnmounted, nextTick } from 'vue'
 import { useEcharts } from '../hooks/use-charts'
 export default {
   name: '',
@@ -18,16 +18,18 @@ export default {
       default: () => ({})
     }
   },
-  setup(props, { emit }) {
+  setup(props: any, { emit }) {
     const echartRef = ref<HTMLElement>()
     let resizeFn: any
     onMounted(() => {
-      const [setOptions, resizeHandler] = useEcharts(echartRef.value!)
-      resizeFn = resizeHandler
-      watchEffect(() => {
-        setOptions(props.options)
+      nextTick(() => {
+        const [setOptions, resizeHandler] = useEcharts(echartRef.value!)
+        resizeFn = resizeHandler
+        watchEffect(() => {
+          setOptions(props.options)
+        })
+        window.addEventListener('resize', resizeFn)
       })
-      window.addEventListener('resize', resizeFn)
     })
     onUnmounted(() => {
       window.removeEventListener('resize', resizeFn)

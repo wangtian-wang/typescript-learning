@@ -1,16 +1,93 @@
 <template>
-  <div></div>
+  <div class="bar-chart-wrapper">
+    <base-chart :options="options"></base-chart>
+  </div>
 </template>
 
-<script>
-import { reactive, ref, computed, watch } from 'vue'
-
+<script lang="ts">
+import { reactive, ref, computed, watch, PropType } from 'vue'
+import * as echarts from 'echarts'
+import { IEchartXAxisLabel, IEchartValueData } from '../types'
+import BaseChart from '@/base-ui/base-chart/index'
 export default {
   name: '',
-  components: {},
-  props: {},
-  setup(props, { emit }) {
-    return {}
+  components: { BaseChart },
+  props: {
+    labels: {
+      type: Array as PropType<IEchartXAxisLabel[]>,
+      default: () => []
+    },
+    values: {
+      type: Array as PropType<IEchartValueData[]>
+    }
+  },
+  setup(props: any) {
+    const options = computed(() => {
+      return {
+        title: {
+          text: '支持鼠标滚动缩放'
+        },
+        grid: {
+          bottom: '5%'
+        },
+        xAxis: {
+          data: props.labels,
+          axisLabel: {
+            inside: true,
+            color: '#fff'
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          z: 10
+        },
+        yAxis: {
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+            color: '#999'
+          }
+        },
+        dataZoom: [
+          {
+            type: 'inside'
+          }
+        ],
+        series: [
+          {
+            type: 'bar',
+            showBackground: true,
+            itemStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: '#83bff6' },
+                { offset: 0.5, color: '#188df0' },
+                { offset: 1, color: '#188df0' }
+              ])
+            },
+            emphasis: {
+              itemStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: '#2378f7' },
+                  { offset: 0.7, color: '#2378f7' },
+                  { offset: 1, color: '#83bff6' }
+                ])
+              }
+            },
+            data: props.values
+          }
+        ]
+      }
+    })
+    return {
+      options
+    }
   }
 }
 </script>
