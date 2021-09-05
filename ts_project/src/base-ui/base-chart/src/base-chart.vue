@@ -18,7 +18,7 @@ export default {
       default: () => ({})
     }
   },
-  setup(props: any, { emit }) {
+  setup(props: any) {
     const echartRef = ref<HTMLElement>()
     let resizeFn: any
     onMounted(() => {

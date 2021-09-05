@@ -29,23 +29,17 @@ export default {
             saveAsImage: { show: true }
           }
         },
-        tooltip: {
-          trigger: 'item'
-        },
         series: [
           {
-            name: '访问来源',
+            name: '类别数据',
             type: 'pie',
-            radius: [10, 160],
+            radius: [10, 100],
             center: ['50%', '50%'],
             roseType: 'area',
             itemStyle: {
               borderRadius: 8
             },
-            data: props.roseData,
-            label: {
-              show: false
-            }
+            data: props.roseData
           }
         ]
       }

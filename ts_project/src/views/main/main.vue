@@ -43,10 +43,13 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style scoped lang="less">
 #main {
   height: 100%;
   overflow: auto;
+  .page-info {
+    height: 100%;
+  }
 }
 .el-header {
   padding: 0;
