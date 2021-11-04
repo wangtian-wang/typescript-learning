@@ -148,3 +148,188 @@ function getArea(shape: Shape): number {
       return assertNever(shape); // 编译阶段提醒我们 没有判断到的情况
   }
 }
+
+/** this 类型 */
+
+// 子类继承父类 在父类中return的this 可以使子类链式调用父类的方法
+
+class Counter {
+  constructor(public count: number = 0) {
+    this.count = count;
+  }
+  add(x: number, y: number) {
+    console.log(x + y);
+    return this;
+  }
+}
+class ChindCounter extends Counter {
+  constructor(public count: number = 0) {
+    super(count);
+  }
+  substract(x: number, y: number) {
+    console.log(x - y);
+    return this;
+  }
+}
+
+const cCounter = new ChindCounter(3);
+cCounter.add(2, 3).substract(4, 2);
+
+// 索引类型
+// 查询  keyof
+interface PersonInfo {
+  name: string;
+  age: number;
+  sex: null;
+  adress: undefined;
+  job: never;
+}
+let personA: keyof PersonInfo;
+personA = "name";
+personA = "age";
+
+// keyof  结合type 使用  当接口的属性值为never时  属性不能作为字面量联合类型
+
+type GPerson = PersonInfo[keyof PersonInfo]; // type GPerson = string | number | null | undefined
+
+//  总结： keyof 可以实现将 接口的属性 作为 变量的字面量联合类型 相当于 type person = name  | age  let personA : person
+// 访问
+
+function getValues<T, K extends keyof T>(obj: T, names: K[]): Array<T[K]> {
+  //  Array<T[K]>  == obj[k]  K[] == [obj的属性name，obj的属性suger]  K extends keyof T == k === obj的属性name |obj的属性suger
+  return names.map((n) => obj[n]);
+}
+
+const fruits = {
+  name: "apple",
+  suger: "12",
+};
+
+let fruitInfo: Array<string | number> = getValues(fruits, ["name", "suger"]);
+
+// [] 索引访问操作符 用来访问属性的类型
+interface fruitF {
+  name: string;
+  suger: number;
+}
+
+type SuperAnimals = fruitF["name"]; // type SuperAnimals = string
+
+/**
+  定义一个接口 假若该接口的key是string类型 那实现接口的时候 key可以设置为number 对象的属性名会自动转字符串   假若 key是number 类型 那实现的时候 key必须为number
+ */
+
+interface peach {
+  [price: string]: number;
+}
+let ppp: peach = {
+  price: 12,
+};
+interface peach1 {
+  [price: number]: number;
+}
+let ppp1: peach1 = {
+  price: 12,
+};
+let pm: peach["price"];
+
+// 映射类型
+//  ts 内置了两种映射类型 ReadOnly Partial
+interface Goods {
+  price: number;
+  count: number;
+  brand: string;
+}
+// 只读属性    ReadOnly
+type ReadOnlyGoods<T> = {
+  readonly [p in keyof T]: T[p]; // keyof T = {price count brand}  for (key in goods) { readOnly key : goods[key]}
+};
+// 可选参数  Partial
+type ReadOnlyGoodsChoose<T> = {
+  readonly [p in keyof T]?: T[p];
+};
+type ReadOnlyGoods1 = ReadOnlyGoods<Goods>;
+let infoGoods: ReadOnlyGoods1 = {
+  price: 100,
+  count: 12,
+  brand: "new b",
+};
+infoGoods.brand = "qqwqww";
+
+// Pick  原来类型上的 一部分属性名 组成的新的类型
+
+interface GoodsF {
+  price: number;
+  count: number;
+  brand: string;
+}
+const goodsF: GoodsF = {
+  price: 12,
+  count: 10,
+  brand: "none",
+};
+function pick<T, K extends keyof T>(obj: T, key: K[]): Pick<T, K> {
+  const res: any = {};
+  key.map((m) => {
+    res[m] = obj[m];
+  });
+  return res;
+}
+const goodsQ = pick(goodsF, ["brand", "count"]);
+
+// Record 将一个对象中属性值转换为其他类型  返回的对象的属性值和原来的不一样
+// record隐射出的对象的属性值是新的 和输入的不一样 所以是非同态的
+const goodsW = {
+  price: "height",
+  count: "many",
+  brand: "none",
+};
+function mapObjects<K extends string | number, T, U>(
+  obj: Record<K, T>,
+  f: (x: T) => U
+): Record<K, U> {
+  const res: any = {};
+  for (const k in obj) {
+    res[k] = f(obj[k]);
+  }
+  return res;
+}
+const lengths = mapObjects(goodsW, (s) => s.length);
+
+// 同态是啥  ？
+// 两个相同类型的代数的结构保持映射;  record
+// 拆包 由映射类型 推断为原始类型
+type Proxy<T> = {
+  get(): T;
+  set(value: T): void;
+};
+type Proxify<T> = {
+  [P in keyof T]: Proxy<T[P]>;
+};
+// 包装原始对象
+function proxify<T>(obj: T): Proxify<T> {
+  let res = {} as Proxify<T>;
+  for (const k in obj) {
+    res[k] = {
+      get: () => obj[k],
+      set: (value) => (obj[k] = value),
+    };
+  }
+  return res;
+}
+let props = {
+  name: "leo",
+  age: 12,
+};
+let proxyProps = proxify(props);
+proxyProps.name.get();
+
+// 变为原始对象
+function unProxify<T>(obj: Proxify<T>): T {
+  const res = {} as T;
+  for (const k in obj) {
+    res[k] = obj[k].get();
+  }
+  return res;
+}
+let originalObj = unProxify(proxyProps);
