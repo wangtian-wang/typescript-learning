@@ -333,3 +333,160 @@ function unProxify<T>(obj: Proxify<T>): T {
   return res;
 }
 let originalObj = unProxify(proxyProps);
+
+// + - 号修饰符  用于增加 或者取消 属性前面的修饰符
+
+type ReadOnlyType<T> = {
+  +readonly [P in keyof T]: T[P];
+};
+type ReadOnlyInfos = ReadOnlyType<Goods>;
+let infos: ReadOnlyInfos = {
+  price: 12,
+  brand: "none",
+  count: 13,
+};
+type RemoveReadOnlyInfos<T> = {
+  -readonly [P in keyof T]: T[P];
+};
+type NoReadonlyType = RemoveReadOnlyInfos<ReadOnlyInfos>;
+
+// number symbol 类型 可以作为 接口 或者类型别名的属性
+
+const idx1 = "a";
+const idx2 = 1;
+const idx3 = Symbol();
+
+type objSuper = {
+  [idx1]: string;
+  [idx2]: number;
+  [idx3]: symbol;
+};
+type SuperTypes = keyof objSuper; // type SuperTypes = "a" | 1 | typeof idx3
+
+type ReadSuperTypes<T> = {
+  readonly [P in keyof T]: T[P];
+};
+let objSuper1: ReadSuperTypes<objSuper> = {
+  a: "123",
+  1: 11,
+  [idx3]: Symbol(),
+};
+objSuper1[idx3] = Symbol();
+
+// 元祖或者数组的映射类型 会生成新的隐射类型
+
+type Tuple = [number, string, boolean];
+type MapingPromise<T> = {
+  [K in keyof T]: Promise<T[K]>;
+};
+type PromiseTuple = MapingPromise<Tuple>;
+let promiseTurple: PromiseTuple = [
+  new Promise((resolve) => resolve(1)),
+  new Promise((resolve) => resolve("1")),
+  new Promise((resolve) => resolve("false")),
+];
+
+// unknow
+// [1]任何类型都可以赋值给unknow
+// [2]如果没有类型断言或者基于控制流的类型细化时， 不能赋值给某个变量
+let value1: unknown;
+let value2: string = value1;
+value1 = value2;
+// [3]如果没有类型断言或者基于控制流的类型细化时， 不能在unknown上面进行任何操作
+let value3: unknown;
+value3++;
+// [4] unknow 与任何其他类型组成的交叉类型 最后都等于其他类型
+type type1 = unknown & string;
+// [5] unknow 与任何其他类型(除了any),组成的 联合 **类型** 最后都等于unknown类型
+type type5 = unknown | string | string[];
+// [6] never类型是unknown类型的子类型
+type type6 = never extends unknown ? true : false;
+// [7]  keyof unknow 等于类型never
+// [8]   只能对unknow 进行等或者不等的操作 不能进行其他操作
+// [9]   unknow 类型的值 不能访问他的属性，不能作为函数调用；不能作为类创建实例
+let value9: unknown;
+/**
+    value9.age;
+    value9();
+    new value9();
+ */
+
+// [10] 使用映射类型时 如果遍历的是unknow类型，则不会映射任何属性
+type type10<T> = {
+  [P in keyof T]: T[P];
+};
+type type100 = type10<any>;
+type type1000 = type10<unknown>;
+type type10000 = type10<number>;
+
+// 条件类型
+type typeQ<T> = T extends string ? string : number;
+let result: typeQ<"false">;
+
+// 分布式联合类型
+// string number 是any的子类型
+type TypeName<T> = T extends any ? T : never;
+type typeTest = TypeName<string | number>;
+type TypeName1<T> = T extends string
+  ? string
+  : T extends number
+  ? number
+  : T extends boolean
+  ? boolean
+  : T extends undefined
+  ? undefined
+  : T extends Function
+  ? () => void
+  : object;
+type type111 = TypeName1<() => void>;
+type type1111 = TypeName1<string[]>;
+type typeUnin<T> = {
+  [K in keyof T]: T[K] extends Function ? K : never;
+}[keyof T];
+interface part {
+  id: number;
+  name: string;
+  subparts: () => void;
+}
+type type12 = typeUnin<part>; // [keyof T] 返回一个接口中 属性值类型不为never的属性
+
+// infer 条件类型类型推断
+
+//demo  是数组 返回数组元素的类型 否则传入啥类型返回啥类型
+type inferType<T> = T extends any[] ? T[number] : T;
+type itypes = inferType<(string | number)[]>;
+type itypes1 = inferType<string>;
+
+type InferType<T> = T extends Array<infer U> ? U : T;
+type Itypes = inferType<(string | number)[]>;
+type Ttypes1 = inferType<string>;
+
+// 内置的条件类型
+// Exclude<T, U>    当params的元素和params2中有相同的类型时   返回两个类型中的差集
+type ExcludeTypes = Exclude<"a" | "b" | "c", "c">;
+
+// Exclude<T, U>    当params的元素和params2中没有相同的类型时    返回params1中的参数
+type ExcludeTypes1 = Exclude<"string" | "function" | "boolean", "symbol">;
+
+// Extract<T, U>   返回   T 中 可以赋值给U的类型   返回两个类型中相交的类型
+
+type ExtractType = Extract<"string" | "boolean" | "symbol", "symbol">;
+
+// NonNullable<T> 去掉T中的null 和undefined了类型
+
+// ReturnType<T> 获取函数返回值的类型
+type TypeR = ReturnType<() => number>;
+
+// InstanceType<T> 获取构造函数的实例类型
+
+class AClass {
+  constructor() {}
+}
+
+type T1 = InstanceType<typeof AClass>;
+type T2 = InstanceType<any>;
+type T3 = InstanceType<string>;
+
+// any 是任何类型的子类型？？？？
+// 类型推断和兼容性
+// export 对外导出的是接口 （声明的变量） 外界通过这个变量去获取值  动态导出  export必须作为模块全局的对象 不能放在块级作用域内
