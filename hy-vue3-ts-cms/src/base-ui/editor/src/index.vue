@@ -53,7 +53,8 @@ export default defineComponent({
 
     watch(
       () => props.value,
-      () => {
+      (newVal) => {
+        console.log(newVal)
         initEditorContent(props.value, true)
       }
     )
@@ -124,13 +125,13 @@ export default defineComponent({
         'backColor',
         'link',
         'list',
-        // 'todo',
+        'todo',
         'justify',
         'quote',
-        // 'emoticon',
-        // 'image',
-        // 'video',
-        // 'table',
+        'emoticon',
+        'image',
+        'video',
+        'table',
         'code',
         'splitLine',
         'undo',

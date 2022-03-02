@@ -39,7 +39,7 @@ router.beforeEach((to) => {
       return '/login'
     }
 
-    if (to.path === '/main') {
+    if (to.path === '/main' && firstRoute) {
       console.log(firstRoute)
       return firstRoute?.path
     }

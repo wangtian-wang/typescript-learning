@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import HyEditor from '@/base-ui/editor'
 
 export default defineComponent({
@@ -15,6 +15,9 @@ export default defineComponent({
   },
   setup() {
     const htmlString = ref<string>('coderwhy')
+    watch(htmlString, (newVal) => {
+      console.log(newVal, 'newValnewVal')
+    })
     return {
       htmlString
     }
