@@ -43,3 +43,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 - 当在创建项目的时候，选择了使用 pritter + eslint 来对项目进行校验，默认会安装解决冲突的插件 @vue/eslint-config-prettier eslint-plugin-prettier
 - 当项目没有的时候 自行安装
+
+## 项目简介
+
+1： 这是一个使用 ts-vue3 为技术栈的后台管理系统之类的项目，是自己写的

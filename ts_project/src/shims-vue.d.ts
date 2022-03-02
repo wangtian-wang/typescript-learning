@@ -11,3 +11,20 @@ declare module 'axios' {
 
 declare module '*.js'
 declare module '*.json'
+
+interface Window {
+  EventTarget
+  windowTimers
+}
+
+declare var Date: DateConstructor
+
+interface DateConstructor {
+  new (): Date
+  // 一些其他的构造函数签名
+
+  now(): number
+  say(): number
+
+  // 其他成员函数
+}

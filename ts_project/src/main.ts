@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
+import './test.ts'
+
 import router from './router'
 import store from './store'
 import { initStore } from './store'
@@ -23,3 +25,9 @@ slot-scope={prop} name="goodsslot"   具名作用域插槽
 
 
 */
+// const math: MM = {
+//   E: 123,
+//   sandom: (seed?: string) => seed
+// }
+// console.log(math.sandom('pppppp'))
+console.log(window)

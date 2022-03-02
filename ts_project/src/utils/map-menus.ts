@@ -48,8 +48,8 @@ export const getBreadCrumbs = (menus: any[], currenRoute: string) => {
       if (item.type === 1) {
         const subItem = item.children.find((sub: any) => sub.url === currenRoute)
         if (subItem) {
-          crumbs.push({ name: item.name })
-          crumbs.push({ name: subItem.name })
+          crumbs.push({ name: item.name, path: item.url })
+          crumbs.push({ name: subItem.name, path: subItem.url })
           return subItem
         }
       } else if (item.type === 2 && item.url === currenRoute) {

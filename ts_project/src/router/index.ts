@@ -33,12 +33,11 @@ router.beforeEach((to) => {
   if (to.path !== '/login') {
     const token = localCache.getCache('token')
     if (!token) {
-      alert('无效token')
       return '/login'
     }
   }
   // 用户首次进入页面后 显示的当前激活的menu
-  if (to.path === '/main' && firstMenu) {
+  if (to.path === '/main') {
     return firstMenu.url
   }
 })
